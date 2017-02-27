@@ -1,13 +1,16 @@
+#' @export
 sgenenames <- paste('s', as.vector(t(outer(c("", LETTERS),
                                            LETTERS, FUN=paste, sep=""))),
                     sep='')
 
+#' @export
 sgeneNames <- function(n) {
   if (n > length(sgenenames)) stop("too many sgenes: ", n, ", max: ",
                                    length(sgenenames))
   return(sgenenames[1:n])
 }
 
+#' @export
 randomTree <- function(n, edgeGenerator=function() {1},
                        gNames=sgeneNames(n)) {
   r <- diag(n)
@@ -19,6 +22,7 @@ randomTree <- function(n, edgeGenerator=function() {1},
   r
 }
 
+#' @export
 randomModelWithCycles <- function(n, edgeGenerator=function() {1},
                                   gNames=sgeneNames(n),
                                   nBackLinks=function(n) {1}) {
@@ -44,11 +48,13 @@ randomModelWithCycles <- function(n, edgeGenerator=function() {1},
   return(tree)
 }
  
+#' @export
 posneg <- function(n=1, lower=0.75, upper=1.0, negProb=0.25) {
   sample(c(-1,1), replace=T, size=n, prob=c(negProb, 1-negProb)) *
     runif(n, min=lower, max=upper)
 }
 
+#' @export
 generateEgeneParents <- function (nEgenes, sgeneNames, prior=NULL,
                                   inhibition=0.25) {
   parent <- sample(1:length(sgeneNames), size=nEgenes,
@@ -62,7 +68,7 @@ generateEgeneParents <- function (nEgenes, sgeneNames, prior=NULL,
   return(parent)
 }
 
-
+#' @export
 generateQuantization <- function(knockdown.cols, parents, acc) {
   # m vars are to account for a parent of 0, unattached
   macc <- cbind(acc, 0)
@@ -76,6 +82,7 @@ generateQuantization <- function(knockdown.cols, parents, acc) {
   })
 }
 
+#' @export
 generateExpression <- function(quant, params) {
   r <- matrix(NA, nrow=nrow(quant), ncol=ncol(quant), dimnames=dimnames(quant))
   r[quant == -1] <- rnorm(sum(quant == -1), mean=params["neg", "mean"],
@@ -87,6 +94,7 @@ generateExpression <- function(quant, params) {
   return(r)
 }
 
+#' @export
 generateExperiment <- function(nSgenes=8, nEgeneMult=20,
                                nEgenes=nEgeneMult*nSgenes,
                                includeSgeneEffect=FALSE,
@@ -127,7 +135,7 @@ generateExperiment <- function(nSgenes=8, nEgeneMult=20,
   r
 }
 
-# convert an accesibility matrix into a list of the correct answers
+#' convert an accesibility matrix into a list of the correct answers
 #  1 - AtoB
 #  2 - BtoA
 #  3 - ArepB
@@ -137,6 +145,7 @@ generateExperiment <- function(nSgenes=8, nEgeneMult=20,
 #  7 - A |-> B
 #  8 - A <-| B
 #  9 - A |-| B
+#' @export
 accToInteraction <- function(acc) {
   kd <- colnames(acc)
   pairs <- expand.grid(A=kd,B=kd)[as.vector(upper.tri(diag(length(kd)))),]
@@ -163,6 +172,7 @@ accToInteraction <- function(acc) {
   r
 }
 
+#' @export
 accToLinkStrength <- function(acc) {
   kd <- colnames(acc)
   pairs <- expand.grid(A=kd,B=kd)[as.vector(upper.tri(diag(length(kd)))),]
@@ -175,42 +185,48 @@ accToLinkStrength <- function(acc) {
   r
 }
 
+#' @export
 gatherMean <- function(data) {
   n <- nrow(data$sgeneAcc)
   rep(data$obsParams[3,1], n * (n-1) / 2) 
 }
 
+#' @export
 gatherFracInhibition <- function(data) {
   adj <- data$sgeneAdj
   n <- nrow(adj)
   rep(sum(adj < 0) / sum(adj != 0), n * (n-1) / 2)
 }
 
+#' @export
 gatherSize <- function(data) {
   n <- nrow(data$sgeneAdj)
   rep(n, n * (n-1) / 2)
 }
 
+#' @export
 egenePostToParent <- function(s) {
   p <- apply(s$posterior, 1, which.max)
   mid <- (ncol(s$posterior) + 1)/2
   sapply(p, function(i) if (i < mid) i else (mid - i))
 }
 
-# Take in a data.frame of liklihood scores (first two columns sgene names,
-# rest are liklihoods), and make the predictions:
-#  1 - AtoB
-#  2 - BtoA
-#  3 - ArepB
-#  4 - BrepA
-#  5 - AnonB
-#  6 - AeqvB
+#' Take in a data.frame of liklihood scores (first two columns sgene names,
+#' rest are liklihoods), and make the predictions:
+#'  1 - AtoB
+#'  2 - BtoA
+#'  3 - ArepB
+#'  4 - BrepA
+#'  5 - AnonB
+#'  6 - AeqvB
+#' @export
 likelihoodToPredictions <- function(ll.df) {
   r <- apply(as.matrix(ll.df[,3:8]), 1, which.max)
   names(r) <- apply(ll.df[,1:2], 1, paste, collapse="*")
   r
 }
 
+#' @export
 likelihoodToScore <- function(ll.df) {
   r <- apply(as.matrix(ll.df[,3:8]), 1, function(x) {
     -diff(sort(x, decreasing=T))[1]
@@ -219,8 +235,9 @@ likelihoodToScore <- function(ll.df) {
   r
 }
 
-# pairwise is the pairwise score matrix
-# egenes is the egene structure (with knockdown.cols)
+#' pairwise is the pairwise score matrix
+#' egenes is the egene structure (with knockdown.cols)
+#' @export
 scorePairwise <- function(pairwise, egenes, params) {
   adj <- likelihoodToAdj(pairwise)
   model <- knockoutEffect(adj)
@@ -228,6 +245,7 @@ scorePairwise <- function(pairwise, egenes, params) {
   return(scoreModel(model, log.probs))
 }
 
+#' @export
 collectRuns <- function(data, predictions, scorematrix="scores") {
   if (length(data) != length(predictions)) {
     stop("length mismatch on data and prediction lists")
@@ -256,6 +274,7 @@ collectRuns <- function(data, predictions, scorematrix="scores") {
              correct, correctStructure)
 }
 
+#' @export
 collectEgenes <- function(data, posterior, scorematrix="scores") {
   stopifnot(length(data)==length(posterior))
   scores <- lapply(1:length(data), function(i) {
@@ -276,6 +295,8 @@ collectEgenes <- function(data, posterior, scorematrix="scores") {
 ## Plotting
 ##
 library(binom)
+
+#' @export
 histratio <- function(x, breaks="Sturges", conf.level=0.95, length=0.1, ...) {
   allhist <- hist(unlist(x), breaks = breaks, plot = FALSE)
   combhist <- sapply(x, function(z) hist(z, breaks = allhist$breaks,
@@ -285,6 +306,7 @@ histratio <- function(x, breaks="Sturges", conf.level=0.95, length=0.1, ...) {
   arrows(x, b[,'lower'], x, b[,'upper'], angle=90, code=3, length=length)
 }
 
+#' @export
 multhistratio <- function(x, breaks="Sturges",
                           conf.level=0.95, length=0.1,
                           axislabelstart=NULL,

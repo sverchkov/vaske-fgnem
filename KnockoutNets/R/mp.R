@@ -1,3 +1,4 @@
+#' @export
 isValidScoreMatrix <- function(matrix) {
   if (length(dim(matrix)) !=2 || ncol(matrix) != 8) {
     return(false)
@@ -6,17 +7,19 @@ isValidScoreMatrix <- function(matrix) {
   return(nrow(matrix) == (n*(n-1)/2))
 }
 
+#' @export
 idsOfScoreMatrix <- function(scoreDataframe) {
   # the transpose is necessary to ensure that a < b always
   return(unique(as.vector(t(as.matrix(scoreDataframe)[,1:2]))))
 }
 
 
-## Returns a matrix of indices, such that the first two indices
-## specify the edge pair, the triple identifies the transitivity
-## factor.
-##
-## rather ungraceful :(
+##' Returns a matrix of indices, such that the first two indices
+##' specify the edge pair, the triple identifies the transitivity
+##' factor.
+##'
+##' rather ungraceful :(
+##' @export
 edgeAssignments <- function(n) {
   result <- matrix(NA, nrow=(n*(n-1)*(n-2)/2), ncol=3)
   idx <- 1
@@ -35,9 +38,10 @@ edgeAssignments <- function(n) {
   return(result)
 }
 
-## Take in a score matrix, and return a matrix, where each column
-## consists of the neigboring message's row indices in the message
-## matrix
+##' Take in a score matrix, and return a matrix, where each column
+##' consists of the neigboring message's row indices in the message
+##' matrix
+##' @export
 variableNeighbors <- function(scoreDF, edgeAssignments) {
   stringIds <- idsOfScoreMatrix(scoreDF)
   ids <- matrix(match(as.matrix(scoreDF)[,1:2], stringIds), ncol=2)
@@ -50,6 +54,7 @@ variableNeighbors <- function(scoreDF, edgeAssignments) {
   return(result)
 }
 
+#' @export
 messagesToFactor <- function(constants, msgsToVars, varNeighbors, norm=NULL) {
   if (nrow(msgsToVars) == 0 || ncol(msgsToVars) != ncol(constants)) {
     stop("malformed msgsToVars")
@@ -73,6 +78,7 @@ messagesToFactor <- function(constants, msgsToVars, varNeighbors, norm=NULL) {
   return(result)
 }
 
+#' @export
 totalVarBelief <- function(constants, msgsToVars, varNeighbors) {
   result <- matrix(NA, nrow=nrow(constants), ncol=ncol(constants))
   for (i in 1:nrow(constants)) {
@@ -82,11 +88,9 @@ totalVarBelief <- function(constants, msgsToVars, varNeighbors) {
   return(result)
 }
 
-
-##
-## Return a 3D array, with axes B:C, A:C, and A:B, where each axis
-## takes on one of the 6 edges types
-##
+##' Return a 3D array, with axes B:C, A:C, and A:B, where each axis
+##' takes on one of the 6 edges types
+##' @export
 generateTransitivityPotential <- function() {
   ## order is -> <- -| |- : <->
   n <- c("->", "<-", "-|", "|-", ":", "<->")
@@ -125,12 +129,14 @@ generateTransitivityPotential <- function() {
   return(result)
 }
 
+#' @export
 cross <- function(a, b) {
   return(as.vector(outer(b, a, FUN="+")))
 }
 
 #source("~/src/cvaske/R/logsum.R")
 
+#' @export
 messagesToVars <- function(potential, msgsToFactors, norm=T) {
   if (nrow(msgsToFactors) %% 3 != 0 || ncol(msgsToFactors) != 6) {
     stop("malformed msgsToFactors")
@@ -159,6 +165,7 @@ messagesToVars <- function(potential, msgsToFactors, norm=T) {
   return(result)
 }
 
+#' @export
 passMessages <- function(scoreDF, damp=0.5, iters=5, normToV=T, normToF=NULL) {
   if (!isValidScoreMatrix(scoreDF)) {
     stop("invalid score matrix")

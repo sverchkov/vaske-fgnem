@@ -6,6 +6,7 @@
 ## it's somewhat faster than the cleaner matrix-multiply
 ## implementation
 
+#' @export
 sGenePairDomLog <- function(a.logp, b.logp, alpha,
                             summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -20,6 +21,7 @@ sGenePairDomLog <- function(a.logp, b.logp, alpha,
   return(sum(ll, na.rm=na.rm))
 }
 
+#' @export
 sGenePairRepLog <- function(a.logp, b.logp, alpha,
                             summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -34,6 +36,7 @@ sGenePairRepLog <- function(a.logp, b.logp, alpha,
   return(sum(ll, na.rm=na.rm))
 }
 
+#' @export
 sGenePairEqvLog <- function(a.logp, b.logp, alpha,
                             summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -46,7 +49,8 @@ sGenePairEqvLog <- function(a.logp, b.logp, alpha,
   return(sum(ll, na.rm=na.rm))
 }
 
-# negatively equivalent
+#' negatively equivalent
+#' @export
 sGenePairNegEqvLog <- function(a.logp, b.logp, alpha,
                             summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -59,7 +63,8 @@ sGenePairNegEqvLog <- function(a.logp, b.logp, alpha,
   return(sum(ll, na.rm=na.rm))
 }
 
-# Half negatively equivalent
+#' Half negatively equivalent
+#' @export
 sGenePairHalfNegEqvLog <- function(a.logp, b.logp, alpha,
                                    summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -74,6 +79,7 @@ sGenePairHalfNegEqvLog <- function(a.logp, b.logp, alpha,
   return(sum(ll, na.rm=na.rm))
 }
 
+#' @export
 sGenePairNonLog <- function(a.logp, b.logp, alpha,
                             summarization, na.rm=TRUE) {
   ll <- sapply(1:nrow(a.logp), function(j) {
@@ -92,6 +98,7 @@ sGenePairNonLog <- function(a.logp, b.logp, alpha,
 ## 
 ## Prior definitions
 
+#' @export
 pairPriors <- function(params, norm=thirdNullPriorNormalization) {
   return(list(dom=log(norm(domPrior(params))),
               rep=log(norm(repPrior(params))),
@@ -100,7 +107,8 @@ pairPriors <- function(params, norm=thirdNullPriorNormalization) {
               ))
 }
 
-# the null/null prior should be the first argument
+#' the null/null prior should be the first argument
+#' @export
 thirdNullPriorNormalization <- function(prior, nullnull=0.8) {
   prior[1] <- 1/3
   prior[2:length(prior)] <- (2/3) / (length(prior-1)-1)
@@ -116,6 +124,7 @@ thirdNullPriorNormalization <- function(prior, nullnull=0.8) {
   return(prior)
 }
 
+#' @export
 domPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3] *  params['null', 3],
@@ -125,6 +134,7 @@ domPrior <- function(params) {
   return(prior)
 }
 
+#' @export
 repPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3]  * params['null', 3],
@@ -134,6 +144,7 @@ repPrior <- function(params) {
   return(prior)
 }
 
+#' @export
 eqvPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3] *  params['neg', 3],
@@ -141,6 +152,7 @@ eqvPrior <- function(params) {
   return(prior)
 }
 
+#' @export
 negEqvPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3] *  params['pos', 3],
@@ -148,6 +160,7 @@ negEqvPrior <- function(params) {
   return(prior)
 }
 
+#' @export
 halfNegEqvPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3] *  params['pos', 3],
@@ -157,6 +170,7 @@ halfNegEqvPrior <- function(params) {
   return(prior)
 }
 
+#' @export
 nonPrior <- function(params) {
   prior <- c(params['null', 3] * params['null', 3],
              params['neg', 3]  * params['null', 3],

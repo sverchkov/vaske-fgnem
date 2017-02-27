@@ -1,7 +1,7 @@
-##
-## WARNING!  this is as naive, fragile algorithm which
-## recurses infinitely on cycles. (big big hack)
-##
+##' WARNING!  this is as naive, fragile algorithm which
+##' recurses infinitely on cycles. (big big hack)
+##'
+##' @export
 wagnerReduction <- function(accMatrix) {
   stopifnot(is.numeric(accMatrix))
   stopifnot(length(dim(accMatrix)) == 2)
@@ -34,11 +34,12 @@ wagnerReduction <- function(accMatrix) {
   return(accMatrix)
 }
 
-
+#' @export
 identicalColumns <- function(df) {
   return(match(df, df))
 }
 
+#' @export
 mergeEquiv <- function(accMatrix, sep=",") {
   stopifnot(is.numeric(accMatrix))
   stopifnot(length(dim(accMatrix)) == 2)
@@ -58,6 +59,7 @@ mergeEquiv <- function(accMatrix, sep=",") {
   return(acc)
 }
 
+#' @export
 accToDot <- function(accMatrix, forwardLinksOnly=TRUE) {
   stopifnot(is.numeric(accMatrix))
   stopifnot(length(dim(accMatrix)) == 2)

@@ -1,3 +1,12 @@
+#' Write the E-gene tab-separated file
+#'
+#' @param knockdown.cols Vector of knockdown names (one per expression matrix column)
+#' @param lof Loss-of-function genes (vector)
+#' @param stddev Vector of standard deviations (one per expression matrix column)
+#' @param expr Matrix of gene expression levels
+#' @param file Output file
+#' @param append Whether to append to the file
+#' @export
 write.egene.tab <- function(knockdown.cols, lof, stddev, expr,
                             file, append=FALSE) {
   if (length(knockdown.cols) != ncol(expr)) {
@@ -25,6 +34,7 @@ write.egene.tab <- function(knockdown.cols, lof, stddev, expr,
               row.names=FALSE, col.names=FALSE)
 }
 
+#' @export
 read.ann.tab <- function(file, sep="\t") {
   fetchline <- function(line) {
     scan(file, what=character(0), nlines=1, skip=line, quiet=TRUE, sep=sep,
@@ -47,6 +57,7 @@ read.ann.tab <- function(file, sep="\t") {
   c(list(tab=tab), ann)
 }
 
+#' @export
 read.egene.tab <- function(file) {
   result <- read.ann.tab(file)
   names(result)[1] <- "egenes"
@@ -71,13 +82,15 @@ read.egene.tab <- function(file) {
   return(result)
 }
 
+#' @export
 paramGen <- function(offset, sd) {
   matrix(c(-offset, 0, offset, sd, sd, sd, 1/3, 1/3, 1/3), nrow=3, ncol=3,
          dimnames=list(c("neg", "null", "pos"), c("mean", "sd", "alpha")))
 }
 
-# Convert from expression data to scores
-# params should be a vector of sds of length equal to number of columns in expr
+#' Convert from expression data to scores
+#' params should be a vector of sds of length equal to number of columns in expr
+#' @export
 exprToRegLogProbs <- function(expr, knockdown.cols, params, summarize=sum) {
   r <- lapply(unique(knockdown.cols), function(k) {
     t(apply(expr[,knockdown.cols==k, drop=FALSE], 1, function(e) {
@@ -91,9 +104,10 @@ exprToRegLogProbs <- function(expr, knockdown.cols, params, summarize=sum) {
   return(r)
 }
 
-# Convert from expression data to log scores
-# params should be a matrix 3x(2+), with the first column being the means
-# and the second column being the standard deviations
+#' Convert from expression data to log scores
+#' params should be a matrix 3x(2+), with the first column being the means
+#' and the second column being the standard deviations
+#' @export
 exprToRegProbs <- function(expr, knockdown.cols, params) {
   n <- unique(knockdown.cols)
   r <- lapply(n, function(k) {
@@ -107,6 +121,7 @@ exprToRegProbs <- function(expr, knockdown.cols, params) {
   return(r)
 }
 
+#' @export
 estimateParameters <- function(egenes, EMiter=15, mu=NULL, sigma=NULL,
                                verbose=FALSE) {
   x <- as.vector(egenes)
@@ -125,6 +140,8 @@ estimateParameters <- function(egenes, EMiter=15, mu=NULL, sigma=NULL,
   rownames(params) <- c("neg", "null", "pos")
   return(params)
 }
+
+#' @export
 estimateParameters2 <- function(egenes, EMiter=15, mu=NULL, sigma=NULL) {
   x <- as.vector(egenes)
   x <- x[!is.na(x)]
@@ -143,10 +160,10 @@ estimateParameters2 <- function(egenes, EMiter=15, mu=NULL, sigma=NULL) {
   return(params)
 }
 
-##
-## Scoring using true probabilities.  I've found this to be less accurate
-## then using the log probabilities (scorePairsWithPriorsLog)
-##
+##' Scoring using true probabilities.  I've found this to be less accurate
+##' then using the log probabilities (scorePairsWithPriorsLog)
+##'
+##' @export
 scorePairsWithPriors <- function(pairs, egenes.probs, egenes.logprobs,
                                  params) {
   AtoB <- apply(pairs, 1, function(x) {
@@ -172,6 +189,7 @@ S
   ll
 }
 
+#' @export
 scorePairsWithPriorsLog <- function(pairs, egenes.logprobs,
                                     alphas, summarization) {
   AtoB <- apply(pairs, 1, function(x) {
@@ -203,6 +221,7 @@ scorePairsWithPriorsLog <- function(pairs, egenes.logprobs,
   ll
 }
 
+#' @export
 saveRun <- function(egeneStruct, runName,
                     params=NULL,
                     summarization=logsum,
@@ -251,6 +270,7 @@ saveRun <- function(egeneStruct, runName,
   return(r)
 }
 
+#' @export
 scoreEstimates <- function(egeneStruct, 
                            summarization=logsum,
                            pairscorefile='',
@@ -324,8 +344,9 @@ scoreEstimates <- function(egeneStruct,
   return(c(result, trans))
 }
   
-# take an n x 2 character matrix, each row representing a link
-# and convert to an adjacency matrix
+#' take an n x 2 character matrix, each row representing a link
+#' and convert to an adjacency matrix
+#' @export
 generateAdj <- function(links) {
   Sgenes <- unique(as.vector(links))
   adj <- diag(length(Sgenes))
@@ -334,7 +355,8 @@ generateAdj <- function(links) {
   return(adj)
 }
 
-# Thisk looks like a very inefficient way to do this...
+#' Thisk looks like a very inefficient way to do this...
+#' @export
 matPower <- function(X,n){
     if(n != round(n)) {
         n <- round(n)
@@ -354,6 +376,7 @@ matPower <- function(X,n){
     return(phi)
 }
 
+#' @export
 scoresToPvalues <- function(scores, bg.link, bg.non, bg.eqv, scorefile='') {
   scoreSignif <- function(scores, background) {
     sapply(scores, function(x)  sum(background >= x)/length(background))
@@ -379,6 +402,7 @@ scoresToPvalues <- function(scores, bg.link, bg.non, bg.eqv, scorefile='') {
 ## Output functions
 ##
 
+#' @export
 plotParameters <- function(egenes, p, ...) {
   egenes <- egenes[!is.na(egenes)]
   mesh <- seq(from=range(egenes)[1], to=range(egenes)[2], length.out=500)
@@ -390,6 +414,7 @@ plotParameters <- function(egenes, p, ...) {
   }
 }
 
+#' @export
 writeScoreFile <- function(scores, file) {
     tmp <- scores
     tmp[,3:8] <- round(tmp[,3:8], digits=4)
@@ -397,6 +422,7 @@ writeScoreFile <- function(scores, file) {
                 file=file, sep="\t", quote=FALSE, row.names=FALSE)
 }
 
+#' @export
 plotScoreDensities <- function(scoreStruct, columns, file='',
                                main=paste(c('Scores of ', columns)),
                                labels=c("data", "null")) {
@@ -417,6 +443,7 @@ plotScoreDensities <- function(scoreStruct, columns, file='',
   }
 }
 
+#' @export
 plotDensities <- function (densa, densb, acol=1, bcol=2,
                           labels=character(0), ...) {
   xlim = range(c(densa$x, densb$x))
@@ -429,6 +456,7 @@ plotDensities <- function (densa, densb, acol=1, bcol=2,
   }
 }
 
+#' @export
 revEgeneStruct <- function(egeneStruct) {
   r <- egeneStruct
   r$stddev <- rev(r$stddev)
@@ -437,7 +465,7 @@ revEgeneStruct <- function(egeneStruct) {
   r
 }
 
-
+#' @export
 plotProbs <- function(scoreStruct, scaleLiklihood=F, zlim=c(-5,5)) {
   m <- sapply(scoreStruct$egenes.probs, function(x) x[,3]-x[,1])
   if (scaleLiklihood) {
@@ -454,6 +482,7 @@ plotProbs <- function(scoreStruct, scaleLiklihood=F, zlim=c(-5,5)) {
   my.image(m, zlim=zlim, col=yb.pal)
 }
 
+#' @export
 plotExpr <- function(egenes.probs, egeneorder=NULL, doplot=T) {
   lambda <- function (m) {
     val <- apply(m, 1, max)
@@ -477,10 +506,12 @@ plotExpr <- function(egenes.probs, egeneorder=NULL, doplot=T) {
   return(d)
 }
 
+#' @export
 norm.kl.div <- function(m1, s1, m2, s2) {
   return(.5 * (log(s2/s1) + s1/s2 + (m1-m2)*(m1-m2)/s2 - 1))
 }
 
+#' @export
 param.div <- function(params) {
   outer(rownames(params), rownames(params), FUN=function(x,y) {
     norm.kl.div(params[x,'mean'], params[x,'sd'],
@@ -488,6 +519,7 @@ param.div <- function(params) {
   })
 }
 
+#' @export
 signedAcc <- function(adjMatrix) {
   if (!(ncol(adjMatrix) > 0) || ncol(adjMatrix) != nrow(adjMatrix)) {
     stop("Bad input matrix")
@@ -509,9 +541,10 @@ signedAcc <- function(adjMatrix) {
   return(acc)
 }
 
-# Presume that that everything upstream/out of stream of the
-# knockdown is activated, and follow through with knockdown
-# expression of the
+#' Presume that that everything upstream/out of stream of the
+#' knockdown is activated, and follow through with knockdown
+#' expression of the
+#' @export
 knockoutEffect <- function(adjMatrix) {
   acc <- matrix(0, nrow=nrow(adjMatrix), ncol=nrow(adjMatrix),
                 dimnames=dimnames(adjMatrix))
@@ -524,12 +557,14 @@ knockoutEffect <- function(adjMatrix) {
   return(acc)
 }
 
+#' @export
 MatMultAbsMax <- function(A, B) {
   t(apply(A, 1, function(x) {
     apply(x*B, 2, function(y) y[which.max(abs(y))])
   }))
 }
 
+#' @export
 log.probsTo3Array <- function(egenes.logprobs) {
   array(unlist(egenes.logprobs),
         c(dim(egenes.logprobs[[1]]), length(egenes.logprobs)),
@@ -538,7 +573,7 @@ log.probsTo3Array <- function(egenes.logprobs) {
           names(egenes.logprobs)))
 }
 
-
+#' @export
 likelihoodToAdj <- function(ll.df) {
   names <- unique(as.vector(t(ll.df[,1:2])))
   r <- diag(length(names))
@@ -566,6 +601,7 @@ likelihoodToAdj <- function(ll.df) {
   return(r)
 }
 
+#' @export
 scoreModel <- function(accMatrix, egenes.logprobs) {
   stopifnot(rownames(accMatrix) == names(egenes.logprobs),
             colnames(accMatrix) == names(egenes.logprobs))
@@ -608,7 +644,7 @@ scoreModel <- function(accMatrix, egenes.logprobs) {
 }
 
 
-
+#' @export
 scoreBestModelEstimate  <- function(egeneStruct, ..., nullRuns=0) {
   estimates <- scoreEstimates(egeneStruct, ...)
   adj <- likelihoodToAdj(estimates$scores)
@@ -617,13 +653,14 @@ scoreBestModelEstimate  <- function(egeneStruct, ..., nullRuns=0) {
   return (c(estimates, list(adj=adj, acc=acc), ll))
 }
 
+#' @export
 scrambleData <- function(e) {
   m <- matrix(sample(e$egenes), nrow=nrow(e$egenes), ncol=ncol(e$egenes),
               dimnames=dimnames(e$egenes))
   return(list(egenes=m, knockdown.cols=e$knockdown.cols, lof=e$lof))
 }
 
-
+#' @export
 scoreBestModelEstimateNull <- function(egeneStruct, ..., nullRuns=5) {
   return(sapply(1:nullRuns, function (i) {
     scoreBestModelEstimate(scrambleData(egeneStruct), ...)$ll

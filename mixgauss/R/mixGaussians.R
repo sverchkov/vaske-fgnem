@@ -1,3 +1,4 @@
+#' mixGaussians
 #' @export
 "mixGaussians" <-
 function(x, models, iter.max=15,

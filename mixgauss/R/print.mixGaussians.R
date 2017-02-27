@@ -1,3 +1,4 @@
+#' Print Mixed Gaussians
 #' @export
 "print.mixGaussians" <-
 function(x, ...) {

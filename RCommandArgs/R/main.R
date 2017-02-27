@@ -1,8 +1,10 @@
+#' @export
 usage <- function(..., usage) {
   cat(usage, "\n\n")
   stop(...)
 }
 
+#' @export
 "RCommandArgDouble" <-
 function(name, lt, lte, gt, gte, default, errorMsg) {
   if (missing(errorMsg)) errorMsg <- ''
@@ -38,6 +40,7 @@ function(name, lt, lte, gt, gte, default, errorMsg) {
   return(doubleval)
 }
 
+#' @export
 "RCommandArgInteger" <-
 function(name, lt, lte, gt, gte, default, errorMsg) {
   if (missing(errorMsg)) errorMsg <- ''
@@ -76,6 +79,7 @@ function(name, lt, lte, gt, gte, default, errorMsg) {
   return(integerval)
 }
 
+#' @export
 "RCommandArgLogical" <-
 function(name, default, errorMsg) {
   if (missing(errorMsg)) errorMsg <- ''
@@ -104,6 +108,7 @@ function(name, default, errorMsg) {
   }
 }
 
+#' @export
 "RCommandArgString" <-
 function(name, default, errorMsg) {
   if (missing(errorMsg)) errorMsg <- ''
@@ -119,6 +124,7 @@ function(name, default, errorMsg) {
   return(stringval)
 }
 
+#' @export
 "RCommandArgSwitch" <-
 function(name, default, table, errorMsg) {
   if (missing(errorMsg)) errorMsg <- ''
@@ -135,6 +141,7 @@ function(name, default, table, errorMsg) {
   return(table[[stringval]])
 }
 
+#' @export
 "RCommandArgFile" <-
 function(name, default, errorMsg, open="r") {
   if (missing(errorMsg)) errorMsg <- ''
