@@ -1,0 +1,11 @@
+Package: KnockoutNets
+Type: Package
+Title: Infer pathways from phenotypes observed under knockouts
+Version: 1.0
+Date: 2007-07-13
+Author: cvaske
+Maintainer: Charlie Vaske <cvaske@soe.ucsc.edu>
+Description: FG-NEMs are a generalization of Nested Effects Models, which model a signaling network between genes based on the effects of perturbations of these genes.  Typically, effects are gene expression measurements.  FG-NEMs allow for efficient inference on large networks, and can also work on smaller amounts due to modeling of gene-expression sign.
+License: None
+Depends: logsum, mixgauss
+Packaged: Mon Jun 30 11:14:09 2008; cvaske

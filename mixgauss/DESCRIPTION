@@ -1,0 +1,12 @@
+Package: mixgauss
+Type: Package
+Title: Inference of a mixture of Gaussians
+Version: 1.0
+Date: 2007-07-14
+Author: Charlie Vaske <cvaske@soe.ucsc.edu>
+Maintainer: Charlie Vaske <cvaske@soe.ucsc.edu>
+Description: Basic mixture of Gaussians algorithm.  Given a set of one \
+  dimensional points and a number of Gaussians, use EM to determine each \
+  Gaussian's mean and standard deviation.
+License: BSD
+Packaged: Mon Jun 30 11:14:27 2008; cvaske

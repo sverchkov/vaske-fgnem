@@ -1,0 +1,59 @@
+\name{signedAcc}
+\alias{signedAcc}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{ ~~function to do ... ~~ }
+\description{
+  ~~ A concise (1-5 lines) description of what the function does. ~~
+}
+\usage{
+signedAcc(adjMatrix)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{adjMatrix}{ ~~Describe \code{adjMatrix} here~~ }
+}
+\details{
+  ~~ If necessary, more details than the description above ~~
+}
+\value{
+  ~Describe the value returned
+  If it is a LIST, use
+  \item{comp1 }{Description of 'comp1'}
+  \item{comp2 }{Description of 'comp2'}
+  ...
+}
+\references{ ~put references to the literature/web site here ~ }
+\author{ ~~who you are~~ }
+\note{ ~~further notes~~ 
+
+ ~Make other sections like Warning with \section{Warning }{....} ~
+}
+\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (adjMatrix) 
+{
+    if (!(ncol(adjMatrix) > 0) || ncol(adjMatrix) != nrow(adjMatrix)) {
+        stop("Bad input matrix")
+    }
+    diag(adjMatrix) <- 0
+    acc <- adjMatrix \%*\% diag(1, nrow = nrow(adjMatrix))
+    for (i in 1:nrow(adjMatrix)) {
+        acc0 <- acc == 0
+        accNew <- (acc \%*\% adjMatrix)[acc0]
+        if (any(accNew != 0)) {
+            acc[acc0] <- sign(accNew)
+        }
+        else {
+            break
+        }
+    }
+    return(acc)
+  }
+}
+\keyword{ ~kwd1 }% at least one, from doc/KEYWORDS
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

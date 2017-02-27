@@ -1,0 +1,11 @@
+Package: RCommandArgs
+Type: Package
+Title: Read arguments from environment variables, with Rcmd.py
+Version: 1.0
+Date: 2007-07-15
+Author: Charlie Vaske <cvaske@soe.ucsc.edu>
+Maintainer: Charlie Vaske <cvaske@soe.ucsc.edu>
+Description: Reads arguments from environment variables, with parsing to
+  numerics and bounds checking.
+License: BSD
+Packaged: Mon Jun 30 11:54:45 2008; cvaske
