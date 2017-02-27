@@ -1,3 +1,14 @@
 *.tar.gz
 
+# Build ignores
+.Rbuildignore
+
+# Project files
 .Rproj.user
+*.Rproj
+
+# History
+.Rhistory
+
+# Built by Roxygen2
+NAMESPACE
