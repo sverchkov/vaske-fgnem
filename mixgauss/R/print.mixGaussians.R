@@ -1,3 +1,4 @@
+#' @export
 "print.mixGaussians" <-
 function(x, ...) {
   cat("Mixture of ", length(x$mu), " Gaussians of ",

@@ -1,3 +1,4 @@
+#' @export
 "mixGaussians" <-
 function(x, models, iter.max=15,
                          mu=sample(unique(x), models),
