@@ -1,3 +1,4 @@
+#' @export
 "logsum.two" <-
 function(a,b) {
   s <- a < b

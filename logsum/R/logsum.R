@@ -1,3 +1,4 @@
+#' @export
 "logsum" <-
 function(x) {
   x <- x[is.finite(x)]

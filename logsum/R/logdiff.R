@@ -1,3 +1,4 @@
+#' @export
 "logdiff" <-
 function(a, b, thresh=2e-13) {
   if (a < b) {
