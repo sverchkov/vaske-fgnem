@@ -12,3 +12,4 @@
 
 # Built by Roxygen2
 NAMESPACE
+*.Rd
